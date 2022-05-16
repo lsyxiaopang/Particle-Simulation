@@ -29,14 +29,16 @@ class Particle:
         crash_times : int, optional
             _description_, by default 0
         """              
-        self.xc=xc
-        self.yc=yc
+        self.x=xc
+        self.y=yc
         self.vx=vx
         self.vy=vy
+        self.r=r
+        self.m=m
         self.crash_times=crash_times
     @property
     def data_frame(self)->pd.DataFrame:
-        return pd.DataFrame(self.__dict__)
+        return pd.DataFrame(self.__dict__,index=[0])
 
 
 class Wall:
@@ -93,7 +95,7 @@ class ParticleSystem:
         particle_array : np.array
             (输入)粒子列表  
         datagroup : h5py.Group
-            (输出)数据
+            (输入/输出)数据
         rlist : np.array
             (输出)半径列表
         mlist : np.array
@@ -103,6 +105,7 @@ class ParticleSystem:
             self.particle_array=particle_array
             self.wall=wall
             self.time=0
+            self.outdatagroup=datagroup
         else:
             xset:h5py.Dataset=datagroup["x"]
             yset:h5py.Dataset=datagroup["y"]
@@ -127,7 +130,7 @@ class ParticleSystem:
         """        
         op=pd.DataFrame([])
         for i in self.particle_array:
-            pd.concat([op,i.data_frame],axis=0)
+            op=pd.concat([op,i.data_frame],axis=0)
         self.pDataFrame=op
         return op
     def show(self,axes:plt.Axes)->None:
@@ -141,3 +144,25 @@ class ParticleSystem:
         axes.scatter(self.pDataFrame["x"],self.pDataFrame["y"],self.pDataFrame["r"])
         axes.set_xlim(self.wall.xlim)
         axes.set_ylim(self.wall.ylim)
+    def in_write_hdf5(self,outstep:float,all_time:float,d:float):
+        """in_write_hdf5 将输入数据写入hdf5中
+
+        Parameters
+        ----------
+        outstep : float
+            输出的时间步
+        all_time : float
+            总共计算的时间
+        d : float
+            特征长度
+        """        
+        self.outdatagroup["x"]=self.pDataFrame["x"]
+        self.outdatagroup["y"]=self.pDataFrame["y"]
+        self.outdatagroup["vx"]=self.pDataFrame["vx"]
+        self.outdatagroup["vy"]=self.pDataFrame["vy"]
+        self.outdatagroup["r"]=self.pDataFrame["r"]
+        self.outdatagroup["m"]=self.pDataFrame["m"]
+        self.outdatagroup.attrs["out_put_step"]=outstep
+        self.outdatagroup.attrs["time_out"]=all_time
+        self.outdatagroup.attrs["d"]=d
+        self.outdatagroup.attrs["count"]=len(self.particle_array)

@@ -6,6 +6,7 @@ project ("ParticleSimulation")
 
 find_package(HDF5 REQUIRED COMPONENTS C CXX)
 
+set(CMAKE_BUILD_TYPE "Release")
 
 include_directories(${HDF5_INCLUDE_DIR})
 

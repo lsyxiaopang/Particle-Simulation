@@ -43,7 +43,10 @@ int main(int argc,char** argv)
     //a.run_step(5);
     //Wall wall(vec(0,0),vec(500,500));
     //wall.check_handle_crash(a, 5);
-    IOHelper ios(argv[1]);
+    std::cout<<argv[1];
+    // int t;
+    // std::cin>>t;
+    IOHelper ios(argv[1]); 
     ios.init_particle();
     ios.auto_run();
     return 0;

@@ -1,0 +1,10 @@
+^C:\USERS\H\ONEDRIVE\2\热学\荣誉课\CODE\PARTICLE-SIMULATION\CPPCODE\CMAKELISTS.TXT
+setlocal
+"D:\Program Files\CMake\bin\cmake.exe" -SC:/Users/h/OneDrive/2/热学/荣誉课/code/Particle-Simulation/Cppcode -BC:/Users/h/OneDrive/2/热学/荣誉课/code/Particle-Simulation/Cppcode/build --check-stamp-file C:/Users/h/OneDrive/2/热学/荣誉课/code/Particle-Simulation/Cppcode/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
