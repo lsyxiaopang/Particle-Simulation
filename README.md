@@ -1,5 +1,5 @@
 # Particle Simulation
- Particle Simulation的源代码与操作说明
+Particle Simulation的源代码与操作说明
 ## 主程序的生成
 在Cppcode文件夹中的程序是C++程序源代码(注释请使用GB2312编码打开),需要安装HDF5支持库可以使用.
 >也可以通过修改IOHelper来实现别的方式输出
