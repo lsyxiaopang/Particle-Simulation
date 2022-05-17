@@ -7,15 +7,15 @@
 using namespace H5;
 struct IOSettingType
 {
-	bool out_coordinate;//ï¿½ï¿½Ê±ï¿½È²ï¿½Ê¹ï¿½ï¿½
-	bool out_velocity;//ï¿½ï¿½Ê±ï¿½È²ï¿½Ê¹ï¿½ï¿½
-	Group out_group;//ï¿½ï¿½ï¿½ï¿½ï¿½Ä¾ï¿½ï¿½
-	float time_step;//ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä²½
+	bool out_coordinate;//ÔÝÊ±ÏÈ²»Ê¹ÓÃ
+	bool out_velocity;//ÔÝÊ±ÏÈ²»Ê¹ÓÃ
+	Group out_group;//Êä³ö×éµÄ¾ä±ú
+	float time_step;//Êä³öµÄÊ±¼ä²½
 };
 class IOHelper
 {
 public:
-	IOHelper(const char* file_name);
+	IOHelper(H5std_string file_name);
 	ParticleSystem init_particle();
 	static void* auto_run_func(ParticleSystem* ps, void* cstepn, void* cstep);
 	void auto_run();
@@ -24,11 +24,11 @@ private:
 	static DataSet create_write_array(Group gp,H5std_string ds, void* data, int length, PredType type);
 	static void write_cv(Group gp,ParticleSystem* ps);
 
-	float out_time;//ï¿½ï¿½ï¿½Ê±ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½)
-	float out_put_step;//ï¿½ï¿½ï¿½Ê±ï¿½ä²½(ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½)
-	IOSettingType run_set;//ï¿½ï¿½ï¿½ï¿½
-	H5File file;//ï¿½Ä¼ï¿½
-	ParticleSystem ps;//ï¿½ï¿½ï¿½ï¿½ÏµÍ³
+	float out_time;//Êä³öÊ±¼ä(À´×ÔÎÄ¼þ)
+	float out_put_step;//Êä³öÊ±¼ä²½(À´×ÔÎÄ¼þ)
+	IOSettingType run_set;//ÉèÖÃ
+	H5File file;//ÎÄ¼þ
+	ParticleSystem ps;//Á£×ÓÏµÍ³
 };
 
 struct IOrunningType

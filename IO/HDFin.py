@@ -8,7 +8,7 @@ l1=np.array([ps.Particle(30+np.linspace(0,400,1000)[i],
                         100,100,0.2,1) for i in range(1000)])
 l2=np.array([ps.Particle(5+np.linspace(0,400,1000)[i],
                         20+np.linspace(0,400,1000)[i],
-                        100,100,0.2,1) for i in range(1000)])//初始化点
+                        100,100,0.2,1) for i in range(1000)])#初始化点
 al=np.hstack([l1,l2])
 wall=ps.Wall()
 f=h5py.File("HDF5Data.h5","w")

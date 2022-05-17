@@ -1,16 +1,16 @@
 #include "IOHelper.h"
 /// <summary>
-/// ï¿½Â½ï¿½Ò»ï¿½ï¿½I/Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+/// ÐÂ½¨Ò»¸öI/O´¦ÀíÆ÷
 /// </summary>
-/// <param name="file_name">HDF5ï¿½Ä¼ï¿½ï¿½ï¿½</param>
-IOHelper::IOHelper(const char* file_name= "D:\\python\\Maxwell\\final\\CPPRewrite\\x64\\Release\\test1.h5") :
+/// <param name="file_name">HDF5ÎÄ¼þÃû</param>
+IOHelper::IOHelper(H5std_string file_name= "D:\\python\\Maxwell\\final\\CPPRewrite\\x64\\Release\\test1.h5") :
 	file(file_name, H5F_ACC_RDWR), ps(NULL, 0, NULL, 0)
 {
 }
 /// <summary>
-/// Í¨ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½HDF5ï¿½Ä¼ï¿½Êµï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½Ä³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+/// Í¨¹ý³õÊ¼»¯HDF5ÎÄ¼þÊµÏÖ¶ÔÁ£×ÓÏµÍ³µÄ³õÊ¼»¯Óë±ß½çÌõ¼þÉèÖÃ
 /// </summary>
-/// <returns>ï¿½ï¿½ï¿½ï¿½ÏµÍ³</returns>
+/// <returns>Á£×ÓÏµÍ³</returns>
 ParticleSystem IOHelper::init_particle()
 {
 	H5std_string group_name("input_data");
@@ -22,7 +22,7 @@ ParticleSystem IOHelper::init_particle()
 	ingr.openAttribute("count").read(PredType::INTEL_I32, &count);
 	ingr.openAttribute("out_put_step").read(PredType::INTEL_F32, &out_put_step);
 	ingr.openAttribute("time_out").read(PredType::INTEL_F32, &time_out);
-	ingr.openAttribute("d").read(PredType::INTEL_F32, &d);//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	ingr.openAttribute("d").read(PredType::INTEL_F32, &d);//¶ÁÈ¡¸÷¸öÊý¾Ý
 	Particle* pa = new Particle[count];
 	float* xa = new float[count];
 	float* ya = new float[count];
@@ -55,16 +55,16 @@ ParticleSystem IOHelper::init_particle()
 	return p;
 }
 /// <summary>
-/// ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-/// ï¿½ï¿½ï¿½ï¿½auto_runï¿½Ð±ï¿½ï¿½Øµï¿½
+/// ×Ô¶¯´¦Àíº¯Êý
+/// »áÔÚauto_runÖÐ±»»Øµ÷
 /// </summary>
-/// <param name="ps">ï¿½ï¿½ï¿½ï¿½ÏµÍ³.</param>
-/// <param name="cstepn">ï¿½Ô¸Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
-/// <param name="cstep">args(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½HDF5ï¿½Ä¼ï¿½ï¿½ï¿½Ï¢)</param>
-/// <returns>ï¿½Ô¸Ä±ï¿½ï¿½ï¿½ï¿½</returns>
+/// <param name="ps">Á£×ÓÏµÍ³.</param>
+/// <param name="cstepn">×Ô¸Ä±ä±äÁ¿ÀàÐÍ</param>
+/// <param name="cstep">args(±£´æ¹ØÓÚHDF5ÎÄ¼þÐÅÏ¢)</param>
+/// <returns>×Ô¸Ä±ä±äÁ¿</returns>
 void* IOHelper::auto_run_func(ParticleSystem* ps, void* cstepn, void* cstep)
 {
-	if (cstepn == NULL)//ï¿½ï¿½Ò»ï¿½Îµï¿½ï¿½ï¿½
+	if (cstepn == NULL)//µÚÒ»´Îµ÷ÓÃ
 		cstepn = new IOrunningType();
 	IOrunningType* rt = (IOrunningType*)cstepn;
 	IOSettingType* st = (IOSettingType*)cstep;
@@ -89,11 +89,11 @@ void* IOHelper::auto_run_func(ParticleSystem* ps, void* cstepn, void* cstep)
 			*(pca + i) = (ps->particle_array + i)->crash_times;
 		}
 
-		DataSet xset = IOHelper::create_write_array(thisg, "x", x, count,PredType::INTEL_F32);//xï¿½ï¿½ï¿½ï¿½
-		DataSet yset = IOHelper::create_write_array(thisg, "y", y, count, PredType::INTEL_F32);//yï¿½ï¿½ï¿½ï¿½
-		DataSet vxset = IOHelper::create_write_array(thisg, "vx", vx, count, PredType::INTEL_F32);//xï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
-		DataSet vyset = IOHelper::create_write_array(thisg, "vy", vy, count, PredType::INTEL_F32);//yï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
-		DataSet pcset = IOHelper::create_write_array(thisg, "particle crash times", pca, count, PredType::INTEL_I32);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½
+		DataSet xset = IOHelper::create_write_array(thisg, "x", x, count,PredType::INTEL_F32);//xÊý¾Ý
+		DataSet yset = IOHelper::create_write_array(thisg, "y", y, count, PredType::INTEL_F32);//yÊý¾Ý
+		DataSet vxset = IOHelper::create_write_array(thisg, "vx", vx, count, PredType::INTEL_F32);//x·½ÏòËÙ¶È
+		DataSet vyset = IOHelper::create_write_array(thisg, "vy", vy, count, PredType::INTEL_F32);//y·½ÏòËÙ¶È
+		DataSet pcset = IOHelper::create_write_array(thisg, "particle crash times", pca, count, PredType::INTEL_I32);//Á£×ÓÅö×²Êý
 		hsize_t atsize[1] = { 1 };
 		DataSpace aspace(1, atsize);
 		Attribute ta=thisg.createAttribute("time", PredType::INTEL_F32,aspace);			
@@ -111,7 +111,7 @@ void* IOHelper::auto_run_func(ParticleSystem* ps, void* cstepn, void* cstep)
 	return cstepn;
 }
 /// <summary>
-/// Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
+/// AÈÃÁ£×ÓÏµÍ³°´ÕÕÔ¤¶¨ÐÎÊ½¿ªÊ¼ÔËÐÐ
 /// </summary>
 void IOHelper::auto_run()
 {
@@ -119,9 +119,9 @@ void IOHelper::auto_run()
 	this->ps.auto_run(this->out_time,IOHelper::auto_run_func,&this->run_set);
 }
 /// <summary>
-/// ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½
+/// ÄÚ²¿º¯Êý
 /// </summary>
-/// <returns>Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½</returns>
+/// <returns>Ð´ÈëµÄÊý¾Ý¼¯</returns>
 DataSet IOHelper::create_write_array(Group gp, H5std_string dsname, void* data, int length, PredType type)
 {
 	hsize_t s[1] = { length };
@@ -131,7 +131,7 @@ DataSet IOHelper::create_write_array(Group gp, H5std_string dsname, void* data, 
 	return ds;
 }
 /// <summary>
-/// ×¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½Ï¢
+/// ×¨ÃÅÓÃÓÚÐ´ÈëÅö×²ÐÅÏ¢
 /// </summary>
 void IOHelper::write_cv(Group gp, ParticleSystem* ps)
 {

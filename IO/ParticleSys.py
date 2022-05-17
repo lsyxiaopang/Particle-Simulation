@@ -118,6 +118,8 @@ class ParticleSystem:
             self.time=datagroup.attrs["time"]
             self.wall=wall
             self.wall.crash_times=datagroup.attrs["crash times"]
+            self.particle_array=np.array([Particle(xset[i],yset[i],vxset[i],vyset[i],rlist[i],mlist[i],cset[i]) for i in range(len(xset))])
+
         self.make_DataFrame()
         
     def make_DataFrame(self)->pd.DataFrame:
@@ -166,3 +168,8 @@ class ParticleSystem:
         self.outdatagroup.attrs["time_out"]=all_time
         self.outdatagroup.attrs["d"]=d
         self.outdatagroup.attrs["count"]=len(self.particle_array)
+    def __lt__(self,other):
+        return self.time<other.time
+    def __gt__(self,other):
+        return self.time>other.time
+    
