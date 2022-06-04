@@ -74,13 +74,13 @@ void Particle::handle_crash(Particle &A, Particle &B, float time)
 	vec2 vbtt = ndc * (bvel * ndc);
 	vec2 aven = avel - vatt;
 	vec2 bven = bvel - vbtt;
-	vec2 vm = (aven * m1 + bven * m2) / (m1 + m2);
-	vec2 rvman = aven - vm;
-	vec2 rvmbn = bven - vm;
-	vec2 navn = aven - rvman * 2;
-	vec2 nbvn = bven - rvmbn * 2;
-	vec2 nav = navn + vatt;
-	vec2 nbv = nbvn + vbtt;
+	vec2 vm = (vatt * m1 + vbtt * m2) / (m1 + m2);
+	vec2 rvmat = vatt - vm;
+	vec2 rvmbt = vbtt - vm;
+	vec2 navt = vatt - rvmat * 2;
+	vec2 nbvt = vbtt - rvmbt * 2;
+	vec2 nav = navt + aven;
+	vec2 nbv = nbvt + bven;
 	//!
 	avel = avel - vatt;
 	avel = avel + vbtt;
