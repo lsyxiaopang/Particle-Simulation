@@ -1,4 +1,4 @@
-#include"particle.h"
+#include "particle.h"
 /// <summary>
 /// 初始化一个粒子
 /// </summary>
@@ -6,8 +6,7 @@
 /// <param name="velocity">初始速率</param>
 /// <param name="radius">半径</param>
 /// <param name="weight">质量</param>
-Particle::Particle(vec2 coordinate,vec2 velocity,float radius,float weight):
-	coordinate(coordinate),velocity(velocity),radius(radius),m(weight),crash_times(0)
+Particle::Particle(vec2 coordinate, vec2 velocity, float radius, float weight) : coordinate(coordinate), velocity(velocity), radius(radius), m(weight), crash_times(0)
 {
 }
 
@@ -16,7 +15,7 @@ Particle::Particle(vec2 coordinate,vec2 velocity,float radius,float weight):
 /// </summary>
 /// <param name="other">另一个粒子</param>
 /// <returns></returns>
-float Particle::get_distance(Particle& other)
+float Particle::get_distance(Particle &other)
 {
 	vec2 x = this->coordinate - other.coordinate;
 	return x.mod();
@@ -27,7 +26,7 @@ float Particle::get_distance(Particle& other)
 /// </summary>
 /// <param name="other">另一个粒子</param>
 /// <returns></returns>
-bool Particle::check_crash(Particle& other)
+bool Particle::check_crash(Particle &other)
 {
 	float dis = other.radius + this->radius;
 	return dis >= this->get_distance(other);
@@ -41,7 +40,7 @@ bool Particle::check_crash(Particle& other)
 /// <param name="A">一个粒子</param>
 /// <param name="B">另一个粒子</param>
 /// <param name="time">时间(用于对碰撞的记录)</param>
-void Particle::handle_crash(Particle& A, Particle& B, float time)
+void Particle::handle_crash(Particle &A, Particle &B, float time)
 {
 	//通过构造二次方程求解碰撞时间
 	float dis = A.radius + B.radius;
@@ -52,20 +51,20 @@ void Particle::handle_crash(Particle& A, Particle& B, float time)
 	float c = delcoor.mod();
 	c = c * c;
 	c -= dis * dis;
-	float b1, b2,b;
+	float b1, b2, b;
 	b1 = -2 * delvel.x * delcoor.x;
 	b2 = -2 * delvel.y * delcoor.y;
 	b = b1 + b2;
 	float root = (-b + (float)sqrt(b * b - 4 * a * c));
-	root = root / (2 * a);// 求解得到方程
+	root = root / (2 * a); // 求解得到方程
 	if (isnan(root))
-		return;//外墙碰撞时可能会有速度相同!
-	vec2 acrashcoor = (A.velocity * root)- A.coordinate;
-	vec2 bcrashcoor = (B.velocity * root)- B.coordinate;
+		return; //外墙碰撞时可能会有速度相同!
+	vec2 acrashcoor = (A.velocity * root) - A.coordinate;
+	vec2 bcrashcoor = (B.velocity * root) - B.coordinate;
 	acrashcoor.reverse();
-	bcrashcoor.reverse();//计算发生碰撞的位置
+	bcrashcoor.reverse(); //计算发生碰撞的位置
 	vec2 ndc = acrashcoor - bcrashcoor;
-	ndc.to_unit();//获得轴线的位矢
+	ndc.to_unit(); //获得轴线的位矢
 	//!
 	vec2 avel = A.velocity;
 	vec2 bvel = B.velocity;
@@ -75,23 +74,25 @@ void Particle::handle_crash(Particle& A, Particle& B, float time)
 	vec2 vbtt = ndc * (bvel * ndc);
 	vec2 aven = avel - vatt;
 	vec2 bven = bvel - vbtt;
-	vec2 vm = (aven * m1 + bven*m2)/(m1+m2);
-	vec2 rvma=avel-vm;
-	vec2 rvmb=bvel-vm;
-	vec2 nav=avel-rvma*2;
-	vec2 nbv=bvel-rvmb*2;
+	vec2 vm = (aven * m1 + bven * m2) / (m1 + m2);
+	vec2 rvman = aven - vm;
+	vec2 rvmbn = bven - vm;
+	vec2 navn = aven - rvman * 2;
+	vec2 nbvn = bven - rvmbn * 2;
+	vec2 nav = navn + vatt;
+	vec2 nbv = nbvn + vbtt;
 	//!
 	avel = avel - vatt;
 	avel = avel + vbtt;
 	bvel = bvel - vbtt;
-	bvel = bvel + vatt;//沿轴方向速度交换,垂直于轴速度不变
-	
+	bvel = bvel + vatt; //沿轴方向速度交换,垂直于轴速度不变
+
 	A.coordinate = (nav * root) + acrashcoor;
 	B.coordinate = (nbv * root) + bcrashcoor;
 	A.velocity = nav;
-	B.velocity = nbv;//碰撞后的位置时间
-	
-	if (time>10)//开始记录碰撞信息,只记录时间大于10的情况
+	B.velocity = nbv; //碰撞后的位置时间
+
+	if (time > 10) //开始记录碰撞信息,只记录时间大于10的情况
 	{
 		A.crash_times++;
 		B.crash_times++;
@@ -106,8 +107,8 @@ void Particle::handle_crash(Particle& A, Particle& B, float time)
 void Particle::run_step(float time_step)
 {
 	this->coordinate = this->velocity * time_step + this->coordinate;
-	 //势能项
-	this->coordinate = vec2(0, -40) * time_step * (time_step/2) + this->coordinate;
+	//势能项
+	this->coordinate = vec2(0, -40) * time_step * (time_step / 2) + this->coordinate;
 	this->velocity = vec2(0, -40) * time_step + this->velocity;
 	return;
 }
