@@ -66,18 +66,30 @@ void Particle::handle_crash(Particle& A, Particle& B, float time)
 	bcrashcoor.reverse();//计算发生碰撞的位置
 	vec2 ndc = acrashcoor - bcrashcoor;
 	ndc.to_unit();//获得轴线的位矢
+	//!
 	vec2 avel = A.velocity;
 	vec2 bvel = B.velocity;
+	float m1 = A.m;
+	float m2 = B.m;
 	vec2 vatt = ndc * (avel * ndc);
 	vec2 vbtt = ndc * (bvel * ndc);
+	vec2 aven = avel - vatt;
+	vec2 bven = bvel - vbtt;
+	vec2 vm = (aven * m1 + bven*m2)/(m1+m2);
+	vec2 rvma=avel-vm;
+	vec2 rvmb=bvel-vm;
+	vec2 nav=avel-rvma*2;
+	vec2 nbv=bvel-rvmb*2;
+	//!
 	avel = avel - vatt;
 	avel = avel + vbtt;
 	bvel = bvel - vbtt;
 	bvel = bvel + vatt;//沿轴方向速度交换,垂直于轴速度不变
-	A.coordinate = (avel * root) + acrashcoor;
-	B.coordinate = (bvel * root) + bcrashcoor;
-	A.velocity = avel;
-	B.velocity = bvel;//碰撞后的位置时间
+	
+	A.coordinate = (nav * root) + acrashcoor;
+	B.coordinate = (nbv * root) + bcrashcoor;
+	A.velocity = nav;
+	B.velocity = nbv;//碰撞后的位置时间
 	
 	if (time>10)//开始记录碰撞信息,只记录时间大于10的情况
 	{
