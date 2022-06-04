@@ -16,6 +16,7 @@ public:
 	vec2 operator+(vec2& O);//向量和
 	vec2 operator-(vec2& O);//向量差
 	vec2 operator*(float O);//数乘
+	vec2 operator/(float O);//数除
 	float operator*(vec2& O);//点乘
 	void reverse();//翻转
 	void to_unit();//转换为单位矢

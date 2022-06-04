@@ -1,16 +1,16 @@
-#include<math.h>
+#include <math.h>
 //这个库可以初始化一个矢量(坐标),便于计算
-#include"vec.h"
+#include "vec.h"
 
-vec2::vec2(float x, float y) 
-	:x(x), y(y)
-{	
+vec2::vec2(float x, float y)
+	: x(x), y(y)
+{
 }
 
 float vec2::mod()
 {
 	float retmod;
-	retmod = this->x *this->x + this->y *this->y;
+	retmod = this->x * this->x + this->y * this->y;
 	retmod = sqrt(retmod);
 	if (retmod == 0)
 		retmod = 1e-8;
@@ -21,7 +21,7 @@ float vec2::mod()
 /// </summary>
 /// <param name="O">要求和的矢量</param>
 /// <returns></returns>
-vec2 vec2::operator+(vec2& O)
+vec2 vec2::operator+(vec2 &O)
 {
 	float x = this->x + O.x;
 	float y = this->y + O.y;
@@ -32,7 +32,7 @@ vec2 vec2::operator+(vec2& O)
 /// </summary>
 /// <param name="O">要求差的矢量</param>
 /// <returns></returns>
-vec2 vec2::operator-(vec2& O)
+vec2 vec2::operator-(vec2 &O)
 {
 	float x = this->x - O.x;
 	float y = this->y - O.y;
@@ -52,12 +52,16 @@ vec2 vec2::operator*(float O)
 /// </summary>
 /// <param name="O">另一个矢量</param>
 /// <returns></returns>
-float vec2::operator*(vec2& O)
+float vec2::operator*(vec2 &O)
 {
 	float a, b;
 	a = this->x * O.x;
 	b = this->y * O.y;
 	return a + b;
+}
+vec2 vec2::operator/(float O)
+{
+	return vec2(this->x / O, this->y / O);
 }
 /// <summary>
 /// 向量的叉乘
@@ -66,7 +70,7 @@ float vec2::operator*(vec2& O)
 /// <param name="l">左操作数.</param>
 /// <param name="r">右操作数.</param>
 /// <returns></returns>
-float vec2::cross_product(vec2& l, vec2& r)
+float vec2::cross_product(vec2 &l, vec2 &r)
 {
 	float a = l.x * r.y;
 	float b = l.y * r.x;
@@ -89,4 +93,3 @@ void vec2::to_unit()
 	this->x /= mod;
 	this->y /= mod;
 }
-
